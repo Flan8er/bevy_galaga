@@ -6,14 +6,18 @@ use rand::prelude::*;
 use crate::{
     asset_loader::SceneAssets,
     collision_detection::Collider,
-    movement::{Acceleration, MovingObjectBundle, Velocity},
+    movement::{
+        Acceleration, MovingObjectBundle, PitchAcceleration, PitchVelocity, RollAcceleration,
+        RollVelocity, Velocity,
+    },
+    schedule::InGameSet,
 };
 
 const VELOCITY_SCALAR: f32 = 5.0;
 const ACCELERATION_SCALAR: f32 = 1.0;
 const SPAWN_RANGE_X: Range<f32> = -25.0..25.0;
 const SPAWN_RANGE_Z: Range<f32> = 0.0..25.0;
-const SPAWN_TIME_SECONDS: f32 = 1.0;
+const SPAWN_TIME_SECONDS: f32 = 0.75;
 const ROTATE_SPEED: f32 = 2.5;
 const RADIUS: f32 = 2.5;
 
@@ -34,7 +38,7 @@ impl Plugin for AsteroidPlugin {
         })
         .add_systems(
             Update,
-            (spawn_asteroid, rotate_asteroids, handle_asteroid_collisions),
+            (spawn_asteroid, rotate_asteroids).in_set(InGameSet::EntityUpdates),
         );
     }
 }
@@ -72,6 +76,10 @@ fn spawn_asteroid(
                 Transform::from_translation(translation),
             ),
             collider: Collider::new(RADIUS),
+            pitch_velocity: PitchVelocity::new(0.),
+            pitch_acceleration: PitchAcceleration::new(0.),
+            roll_velocity: RollVelocity::new(0.),
+            roll_acceleration: RollAcceleration::new(0.),
         },
         Asteroid,
     ));
@@ -80,21 +88,5 @@ fn spawn_asteroid(
 fn rotate_asteroids(mut query: Query<&mut Transform, With<Asteroid>>, time: Res<Time>) {
     for mut transform in query.iter_mut() {
         transform.rotate_local_z(ROTATE_SPEED * time.delta_secs());
-    }
-}
-
-fn handle_asteroid_collisions(
-    mut commands: Commands,
-    query: Query<(Entity, &Collider), With<Asteroid>>,
-) {
-    for (entity, collider) in query.iter() {
-        for &collided_entity in collider.colliding_entities.iter() {
-            // Allow asteroid colliding with another asteroid
-            if query.get(collided_entity).is_ok() {
-                continue;
-            }
-            // Otherwise, despawn the asteroid.
-            commands.entity(entity).despawn_recursive();
-        }
     }
 }

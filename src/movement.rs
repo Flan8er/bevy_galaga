@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::collision_detection::Collider;
+use crate::{collision_detection::Collider, schedule::InGameSet};
 
 #[derive(Component, Debug)]
 pub struct Velocity {
@@ -24,19 +24,72 @@ impl Acceleration {
     }
 }
 
+#[derive(Component, Debug)]
+pub struct PitchAcceleration {
+    pub value: f32,
+}
+
+impl PitchAcceleration {
+    pub fn new(value: f32) -> Self {
+        Self { value }
+    }
+}
+
+#[derive(Component, Debug)]
+pub struct PitchVelocity {
+    pub value: f32,
+}
+
+impl PitchVelocity {
+    pub fn new(value: f32) -> Self {
+        Self { value }
+    }
+}
+
+#[derive(Component, Debug)]
+pub struct RollAcceleration {
+    pub value: f32,
+}
+
+impl RollAcceleration {
+    pub fn new(value: f32) -> Self {
+        Self { value }
+    }
+}
+
+#[derive(Component, Debug)]
+pub struct RollVelocity {
+    pub value: f32,
+}
+
+impl RollVelocity {
+    pub fn new(value: f32) -> Self {
+        Self { value }
+    }
+}
+
 #[derive(Bundle)]
 pub struct MovingObjectBundle {
     pub velocity: Velocity,
     pub acceleration: Acceleration,
     pub model: (SceneRoot, Transform),
     pub collider: Collider,
+    pub pitch_velocity: PitchVelocity,
+    pub pitch_acceleration: PitchAcceleration,
+    pub roll_velocity: RollVelocity,
+    pub roll_acceleration: RollAcceleration,
 }
 
 pub struct MovementPlugin;
 
 impl Plugin for MovementPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Update, (update_position, update_velocity));
+        app.add_systems(
+            Update,
+            (update_position, update_velocity)
+                .chain()
+                .in_set(InGameSet::EntityUpdates),
+        );
     }
 }
 
