@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use bevy_third_person_camera::*;
 
 use crate::{
     asset_loader::SceneAssets,
@@ -14,8 +15,8 @@ use crate::{
 
 const STARTING_TRANSLATION: Vec3 = Vec3::new(0.0, 0.0, -20.0);
 const SPACESHIP_ACCELERATION: f32 = 15.0;
-const SPACESHIP_ROTATION_ACCELERATION: f32 = 0.0005;
-const SPACESHIP_ROLL_ACCELERATION: f32 = 0.00075;
+const SPACESHIP_ROTATION_ACCELERATION: f32 = 0.00005;
+const SPACESHIP_ROLL_ACCELERATION: f32 = 0.00005;
 const SPACESHIP_HEALTH: f32 = 100.0;
 const SPACESHIP_COLLSION_DAMAGE: f32 = 100.0;
 const MISSILE_SPEED: f32 = 25.0;
@@ -72,6 +73,7 @@ fn spawn_spaceship(mut commands: Commands, scene_assets: Res<SceneAssets>) {
         Spaceship,
         Health::new(SPACESHIP_HEALTH),
         CollisionDamage::new(SPACESHIP_COLLSION_DAMAGE),
+        ThirdPersonCameraTarget,
     ));
 }
 
@@ -97,31 +99,33 @@ fn spaceship_movement_controls(
     let mut default_movement = 0.0;
 
     // Rotation movement
-    if keyboard_input.pressed(KeyCode::KeyD) {
-        default_rotation = -SPACESHIP_ROTATION_ACCELERATION;
-    } else if keyboard_input.pressed(KeyCode::KeyA) {
-        default_rotation = SPACESHIP_ROTATION_ACCELERATION;
+    if keyboard_input.pressed(KeyCode::KeyD) || keyboard_input.pressed(KeyCode::ArrowRight) {
+        // default_rotation = -SPACESHIP_ROTATION_ACCELERATION;
+        default_roll = SPACESHIP_ROLL_ACCELERATION;
+    } else if keyboard_input.pressed(KeyCode::KeyA) || keyboard_input.pressed(KeyCode::ArrowLeft) {
+        // default_rotation = SPACESHIP_ROTATION_ACCELERATION;
+        default_roll = -SPACESHIP_ROLL_ACCELERATION;
     }
 
     // Forward/Backward movement.
-    if keyboard_input.pressed(KeyCode::KeyS) {
-        default_movement = -SPACESHIP_ACCELERATION;
-    } else if keyboard_input.pressed(KeyCode::KeyW) {
-        default_movement = SPACESHIP_ACCELERATION;
+    if keyboard_input.pressed(KeyCode::KeyS) || keyboard_input.pressed(KeyCode::ArrowDown) {
+        default_rotation = -SPACESHIP_ROTATION_ACCELERATION;
+    } else if keyboard_input.pressed(KeyCode::KeyW) || keyboard_input.pressed(KeyCode::ArrowUp) {
+        default_rotation = SPACESHIP_ROTATION_ACCELERATION;
     }
 
     // Roll movement
     if keyboard_input.pressed(KeyCode::ShiftLeft) {
-        default_roll = -SPACESHIP_ROLL_ACCELERATION;
+        default_movement = SPACESHIP_ACCELERATION;
     } else if keyboard_input.pressed(KeyCode::ControlLeft) {
-        default_roll = SPACESHIP_ROLL_ACCELERATION;
+        default_movement = -SPACESHIP_ACCELERATION;
     }
 
     // Rotate around the Y-axis.
     // Ignores the Z-axis rotation applied below.
     // transform.rotate_y(rotation);
     pitch.value = default_rotation + pitch.value;
-    transform.rotate_y(pitch.value);
+    transform.rotate_local_x(pitch.value);
 
     // Rotate around the local Z-axis.
     // The rotation is relative to the current rotation.

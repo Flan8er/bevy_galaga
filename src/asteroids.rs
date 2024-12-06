@@ -17,7 +17,8 @@ use crate::{
 const VELOCITY_SCALAR: f32 = 5.0;
 const ACCELERATION_SCALAR: f32 = 1.0;
 const SPAWN_RANGE_X: Range<f32> = -25.0..25.0;
-const SPAWN_RANGE_Z: Range<f32> = 0.0..25.0;
+const SPAWN_RANGE_Y: Range<f32> = -25.0..25.0;
+const SPAWN_RANGE_Z: Range<f32> = -25.0..25.0;
 const SPAWN_TIME_SECONDS: f32 = 0.75;
 const ROTATE_SPEED: f32 = 2.5;
 const RADIUS: f32 = 2.5;
@@ -61,12 +62,18 @@ fn spawn_asteroid(
 
     let translation = Vec3::new(
         rng.gen_range(SPAWN_RANGE_X),
-        0.,
+        rng.gen_range(SPAWN_RANGE_Y),
         rng.gen_range(SPAWN_RANGE_Z),
     );
 
-    let mut random_unit_vector =
-        || Vec3::new(rng.gen_range(-1.0..1.0), 0., rng.gen_range(-1.0..1.0)).normalize_or_zero();
+    let mut random_unit_vector = || {
+        Vec3::new(
+            rng.gen_range(-1.0..1.0),
+            rng.gen_range(-1.0..1.0),
+            rng.gen_range(-1.0..1.0),
+        )
+        .normalize_or_zero()
+    };
     let velocity = random_unit_vector() * VELOCITY_SCALAR;
     let acceleration = random_unit_vector() * ACCELERATION_SCALAR;
 

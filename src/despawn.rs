@@ -1,8 +1,8 @@
 use bevy::prelude::*;
 
-use crate::{health::Health, schedule::InGameSet, state::GameState};
+use crate::{health::Health, schedule::InGameSet, spaceship::Spaceship, state::GameState};
 
-const DESPAWN_DISTANCE: f32 = 100.0;
+const DESPAWN_DISTANCE: f32 = 500.0;
 
 pub struct DespawnPlugin;
 
@@ -16,9 +16,19 @@ impl Plugin for DespawnPlugin {
     }
 }
 
-fn despawn_far_away_entities(mut commands: Commands, query: Query<(Entity, &GlobalTransform)>) {
+fn despawn_far_away_entities(
+    mut commands: Commands,
+    query: Query<(Entity, &Transform), Without<Spaceship>>,
+    spaceship_query: Query<(Entity, &Transform), With<Spaceship>>,
+) {
+    let Ok((_, spaceship_position)) = spaceship_query.get_single() else {
+        return;
+    };
+
     for (entity, transform) in query.iter() {
-        let distance = transform.translation().distance(Vec3::ZERO);
+        let distance = transform
+            .translation
+            .distance(spaceship_position.translation);
 
         // Entity is far away from the camera's viewport (i.e. origin).
         if distance > DESPAWN_DISTANCE {

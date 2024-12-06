@@ -1,3 +1,6 @@
+use bevy::prelude::*;
+use bevy_third_person_camera::*;
+
 mod asset_loader;
 mod asteroids;
 mod camera;
@@ -12,7 +15,6 @@ mod state;
 
 use asset_loader::AssetLoaderPlugin;
 use asteroids::AsteroidPlugin;
-use bevy::prelude::*;
 use camera::CameraPlugin;
 use collision_detection::CollisionDetectionPlugin;
 use debug::DebugPlugin;
@@ -30,7 +32,7 @@ fn main() {
             color: Color::default(),
             brightness: 750.0,
         })
-        .add_plugins(DefaultPlugins)
+        .add_plugins((DefaultPlugins, ThirdPersonCameraPlugin))
         // User configured plugins.
         .add_plugins(AssetLoaderPlugin)
         .add_plugins(MovementPlugin)
