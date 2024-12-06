@@ -1,11 +1,13 @@
 use bevy::prelude::*;
 
+use crate::state::GameState;
+
 #[derive(Debug, Hash, PartialEq, Eq, Clone, SystemSet)]
 pub enum InGameSet {
+    DespawnEntities,
     UserInput,
     EntityUpdates,
     CollisionDetection,
-    DespawnEntities,
 }
 
 pub struct SchedulePlugin;
@@ -15,12 +17,14 @@ impl Plugin for SchedulePlugin {
         app.configure_sets(
             Update,
             (
+                InGameSet::DespawnEntities,
+                // Flush commands (i.e. `apply_deferred` runs)
                 InGameSet::UserInput,
                 InGameSet::EntityUpdates,
                 InGameSet::CollisionDetection,
-                InGameSet::DespawnEntities,
             )
-                .chain(),
+                .chain()
+                .run_if(in_state(GameState::InGame)),
         )
         .add_systems(
             Update,
