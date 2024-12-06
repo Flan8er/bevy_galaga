@@ -7,10 +7,7 @@ use crate::{
     asset_loader::SceneAssets,
     collision_detection::{Collider, CollisionDamage},
     health::Health,
-    movement::{
-        Acceleration, MovingObjectBundle, PitchAcceleration, PitchVelocity, RollAcceleration,
-        RollVelocity, Velocity,
-    },
+    movement::{Acceleration, MovingObjectBundle, PitchAcceleration, RollAcceleration, Velocity},
     schedule::InGameSet,
 };
 
@@ -86,9 +83,7 @@ fn spawn_asteroid(
                 Transform::from_translation(translation),
             ),
             collider: Collider::new(RADIUS),
-            pitch_velocity: PitchVelocity::new(0.),
             pitch_acceleration: PitchAcceleration::new(0.),
-            roll_velocity: RollVelocity::new(0.),
             roll_acceleration: RollAcceleration::new(0.),
         },
         Asteroid,

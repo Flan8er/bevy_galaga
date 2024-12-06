@@ -5,10 +5,7 @@ use crate::{
     asset_loader::SceneAssets,
     collision_detection::{Collider, CollisionDamage},
     health::Health,
-    movement::{
-        Acceleration, MovingObjectBundle, PitchAcceleration, PitchVelocity, RollAcceleration,
-        RollVelocity, Velocity,
-    },
+    movement::{Acceleration, MovingObjectBundle, PitchAcceleration, RollAcceleration, Velocity},
     schedule::InGameSet,
     state::GameState,
 };
@@ -65,9 +62,7 @@ fn spawn_spaceship(mut commands: Commands, scene_assets: Res<SceneAssets>) {
                 Transform::from_translation(STARTING_TRANSLATION),
             ),
             collider: Collider::new(SPACESHIP_RADIUS),
-            pitch_velocity: PitchVelocity::new(0.),
             pitch_acceleration: PitchAcceleration::new(0.),
-            roll_velocity: RollVelocity::new(0.),
             roll_acceleration: RollAcceleration::new(0.),
         },
         Spaceship,
@@ -88,7 +83,7 @@ fn spaceship_movement_controls(
         With<Spaceship>,
     >,
     keyboard_input: Res<ButtonInput<KeyCode>>,
-    time: Res<Time>,
+    // time: Res<Time>,
 ) {
     // let (mut transform, mut acceleration) = query.single_mut();
     let Ok((mut transform, mut acceleration, mut roll, mut pitch)) = query.get_single_mut() else {
@@ -157,9 +152,7 @@ fn spaceship_weapon_controls(
                     ),
                 ),
                 collider: Collider::new(MISSILE_RADIUS),
-                pitch_velocity: PitchVelocity::new(0.),
                 pitch_acceleration: PitchAcceleration::new(0.),
-                roll_velocity: RollVelocity::new(0.),
                 roll_acceleration: RollAcceleration::new(0.),
             },
             SpaceshipMissile,

@@ -17,7 +17,7 @@ use asset_loader::AssetLoaderPlugin;
 use asteroids::AsteroidPlugin;
 use camera::CameraPlugin;
 use collision_detection::CollisionDetectionPlugin;
-use debug::DebugPlugin;
+// use debug::DebugPlugin;
 use despawn::DespawnPlugin;
 use movement::MovementPlugin;
 use schedule::SchedulePlugin;

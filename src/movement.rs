@@ -36,33 +36,11 @@ impl PitchAcceleration {
 }
 
 #[derive(Component, Debug)]
-pub struct PitchVelocity {
-    pub value: f32,
-}
-
-impl PitchVelocity {
-    pub fn new(value: f32) -> Self {
-        Self { value }
-    }
-}
-
-#[derive(Component, Debug)]
 pub struct RollAcceleration {
     pub value: f32,
 }
 
 impl RollAcceleration {
-    pub fn new(value: f32) -> Self {
-        Self { value }
-    }
-}
-
-#[derive(Component, Debug)]
-pub struct RollVelocity {
-    pub value: f32,
-}
-
-impl RollVelocity {
     pub fn new(value: f32) -> Self {
         Self { value }
     }
@@ -74,9 +52,7 @@ pub struct MovingObjectBundle {
     pub acceleration: Acceleration,
     pub model: (SceneRoot, Transform),
     pub collider: Collider,
-    pub pitch_velocity: PitchVelocity,
     pub pitch_acceleration: PitchAcceleration,
-    pub roll_velocity: RollVelocity,
     pub roll_acceleration: RollAcceleration,
 }
 

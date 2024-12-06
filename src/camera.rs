@@ -1,8 +1,6 @@
 use bevy::prelude::*;
 use bevy_third_person_camera::*;
 
-const CAMERA_DISTANCE: f32 = 80.0;
-
 pub struct CameraPlugin;
 
 impl Plugin for CameraPlugin {
@@ -10,13 +8,6 @@ impl Plugin for CameraPlugin {
         app.add_systems(Startup, spawn_camera);
     }
 }
-
-// fn spawn_camera(mut commands: Commands) {
-//     commands.spawn((
-//         Camera3d::default(),
-//         Transform::from_xyz(0.0, CAMERA_DISTANCE, 0.0).looking_at(Vec3::ZERO, Vec3::Z),
-//     ));
-// }
 
 fn spawn_camera(mut commands: Commands) {
     commands.spawn((
