@@ -4,11 +4,6 @@ use crate::asset_loader::SceneAssets;
 
 const EARTH_DIAMETER: f64 = 1.;
 
-#[derive(Bundle)]
-struct SpaceshipBundle {
-    model: (SceneRoot, Transform),
-}
-
 pub struct EarthPlugin;
 
 impl Plugin for EarthPlugin {
