@@ -6,11 +6,9 @@ mod calculation;
 mod camera;
 mod capsule;
 mod earth;
+mod plugins;
 
-use asset_loader::AssetLoaderPlugin;
-use camera::CameraPlugin;
-use capsule::CapsulePlugin;
-use earth::EarthPlugin;
+use plugins::AppPlugins;
 
 fn main() {
     App::new()
@@ -22,11 +20,6 @@ fn main() {
         })
         .add_plugins(DefaultPlugins)
         .add_plugins(PanOrbitCameraPlugin)
-        .add_plugins(AssetLoaderPlugin)
-        .add_plugins(CameraPlugin)
-        .add_plugins(EarthPlugin)
-        .add_plugins(CapsulePlugin)
+        .add_plugins(AppPlugins)
         .run();
 }
-
-// // Reentry starts at 200,000[m] at 7,555[m/s]
