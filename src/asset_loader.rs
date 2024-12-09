@@ -9,6 +9,6 @@ pub struct SceneAssets {
 pub fn load_assets(mut scene_assets: ResMut<SceneAssets>, asset_server: Res<AssetServer>) {
     *scene_assets = SceneAssets {
         capsule: asset_server.load("Bullet.glb#Scene0"),
-        earth: asset_server.load("Earth.glb#Scene0"),
+        earth: asset_server.load("Earth_Mid_Res_Non_Scaled.glb#Scene0"),
     }
 }

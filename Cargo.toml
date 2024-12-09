@@ -4,6 +4,6 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-bevy = "0.15.0"
+bevy = { version = "0.15.0", features=["jpeg"] }
 bevy_panorbit_camera = "0.21.0"
 rand = "0.8.5"

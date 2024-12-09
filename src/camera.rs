@@ -1,8 +1,9 @@
 use bevy::prelude::*;
 use bevy_panorbit_camera::PanOrbitCamera;
+use crate::earth::EARTH_DIAMETER;
 
-const CAMERA_DISTANCE: f32 = 1500.0;
-// const CAMERA_DISTANCE: f32 = 10.0;
+// const CAMERA_DISTANCE: f32 = EARTH_DIAMETER + 1000.;
+const CAMERA_DISTANCE: f32 = 10.0;
 
 pub fn spawn_camera(mut commands: Commands) {
     commands.spawn((
@@ -13,7 +14,7 @@ pub fn spawn_camera(mut commands: Commands) {
             far: 1000.0,
             aspect_ratio: 1.77778,
         }),
-        Transform::from_xyz(0.0, CAMERA_DISTANCE, 0.0).looking_at(Vec3::ZERO, Vec3::Y),
+        Transform::from_xyz(CAMERA_DISTANCE, 0.0, 0.0).looking_at(Vec3::ZERO, Vec3::Y),
         GlobalTransform::default(),
         PanOrbitCamera::default(),
         Name::new("Main Camera"),

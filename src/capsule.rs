@@ -35,20 +35,20 @@ pub fn spawn_capsule(mut commands: Commands, scene_assets: Res<SceneAssets>) {
 }
 
 pub fn update_capsule_position(mut previous_state: ResMut<Capsule>) {
-    let previous_position = previous_state.position;
-    let previous_velocity = previous_state.velocity;
+    // let previous_position = previous_state.position;
+    // let previous_velocity = previous_state.velocity;
 
-    let mut updated_position = Vec3::ZERO;
-    let mut updated_velocity = Vec3::ZERO;
+    // let mut updated_position = Vec3::ZERO;
+    // let mut updated_velocity = Vec3::ZERO;
 
-    println!("{:#?}", previous_position);
-    println!("{:#?}", previous_velocity);
+    // println!("{:#?}", previous_position);
+    // println!("{:#?}", previous_velocity);
 
-    // Update the position from new calculated value.
-    updated_position.x = previous_position.x + 1.;
-    previous_state.position = updated_position;
+    // // Update the position from new calculated value.
+    // updated_position.x = previous_position.x + 1.;
+    // previous_state.position = updated_position;
 
-    // Update the position from new calculated value.
-    updated_velocity.x = previous_velocity.x + 1.;
-    previous_state.velocity = updated_velocity;
+    // // Update the position from new calculated value.
+    // updated_velocity.x = previous_velocity.x + 1.;
+    // previous_state.velocity = updated_velocity;
 }
