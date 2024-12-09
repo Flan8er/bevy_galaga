@@ -7,6 +7,7 @@ mod camera;
 mod capsule;
 mod earth;
 mod plugins;
+mod movement;
 
 use plugins::AppPlugins;
 

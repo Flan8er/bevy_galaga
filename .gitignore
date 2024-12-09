@@ -1,1 +1,3 @@
 /target
+/assets/*
+!/assets/Earth_Low_Res_Scaled.glb
