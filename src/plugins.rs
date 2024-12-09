@@ -6,7 +6,7 @@ use crate::{
     capsule::{
         spawn_capsule, update_capsule_position, Capsule, INITIAL_POSITION, INITIAL_VELOCITY,
     },
-    earth::spawn_earth,
+    earth::{spawn_earth, rotate_earth},
 };
 
 pub struct AppPlugins;
@@ -21,7 +21,7 @@ impl Plugin for AppPlugins {
             )
             .add_systems(
                 Update,
-                (update_capsule_position, update_camera_focus).chain(),
+                (update_capsule_position, update_camera_focus, rotate_earth).chain(),
             );
     }
 }

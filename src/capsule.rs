@@ -1,9 +1,10 @@
 use bevy::prelude::*;
 
-use crate::asset_loader::SceneAssets;
+use crate::{asset_loader::SceneAssets, earth::EARTH_DIAMETER};
 
-const CAPSULE_SCALE: f32 = 1.; //0.05;
-pub const INITIAL_POSITION: Vec3 = Vec3::new(200_000., 0., 0.);
+const CAPSULE_SCALE: f32 = 1.;
+// pub const INITIAL_POSITION: Vec3 = Vec3::new((EARTH_DIAMETER / 2.) + 200_000., 0., 0.);
+pub const INITIAL_POSITION: Vec3 = Vec3::new((EARTH_DIAMETER / 2.) + 125_000., 0., 0.);
 pub const INITIAL_VELOCITY: Vec3 = Vec3::new(7555., 0., 0.);
 
 #[derive(Resource, Debug, Clone)]
@@ -26,7 +27,8 @@ pub fn spawn_capsule(mut commands: Commands, scene_assets: Res<SceneAssets>) {
         SceneRoot(scene_assets.capsule.clone()),
         Transform {
             scale: Vec3::splat(CAPSULE_SCALE as f32),
-            translation: Vec3::new(400., 400., 0.), // Replace with initial position
+            translation: INITIAL_POSITION, // Replace with initial position
+            rotation: Quat::from_axis_angle(Vec3::new(1., 0., 0.), (-90. * std::f32::consts::PI) / 180.0),
             ..Default::default()
         },
         GlobalTransform::default(),
@@ -35,6 +37,7 @@ pub fn spawn_capsule(mut commands: Commands, scene_assets: Res<SceneAssets>) {
 }
 
 pub fn update_capsule_position(mut previous_state: ResMut<Capsule>) {
+    // println!("Update cycle ran");
     // let previous_position = previous_state.position;
     // let previous_velocity = previous_state.velocity;
 
