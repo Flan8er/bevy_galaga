@@ -28,7 +28,6 @@ pub fn get_current_altitude(current_position: Vec3) -> f32 {
             .sqrt();
     let relative_altitude = (vector_magnitude - (EARTH_DIAMETER / 2.)).abs();
 
-    // println!("{:#?}", current_position);
     relative_altitude
 }
 
@@ -104,8 +103,7 @@ pub fn calculate_cumulative_acceleration(
         ),
     );
     let acceleration_gravity = calculate_gravitational_acceleration(position, object_mass);
-    // println!("2. {:#?}", acceleration_drag);
-    // println!("3. {:#?}", acceleration_gravity);
+
     let acceleration_total = Vec3::new(
         acceleration_drag.x + acceleration_gravity.x,
         acceleration_drag.y + acceleration_gravity.y,

@@ -40,7 +40,7 @@ pub fn spawn_capsule(mut commands: Commands, scene_assets: Res<SceneAssets>) {
         SceneRoot(scene_assets.capsule.clone()),
         Transform {
             scale: Vec3::splat(CAPSULE_SCALE as f32),
-            translation: INITIAL_POSITION, // Replace with initial position
+            translation: INITIAL_POSITION,
             rotation: Quat::from_axis_angle(
                 Vec3::new(1., 0., 0.),
                 (-90. * std::f32::consts::PI) / 180.0,
@@ -58,7 +58,6 @@ pub fn spawn_capsule(mut commands: Commands, scene_assets: Res<SceneAssets>) {
 
 pub fn update_capsule_position(mut previous_state: ResMut<Capsule>, time: Res<Time>) {
     let delta_time: f32 = time.delta().as_secs_f32();
-    // println!("{}", delta_time);
     if delta_time == 0.0 {
         return;
     }
@@ -90,11 +89,8 @@ pub fn update_capsule_position(mut previous_state: ResMut<Capsule>, time: Res<Ti
         position,
     );
 
-    // println!("01. {:#?}", acceleration_total);
-
-    // println!("{:#?}", acceleration_total);
-    // println!("{:#?}", delta_time);
     // Apply the acceleration to find the new position using the previous cycle time (this assumes cycle times are roughly equal).
+    // New velocity is the velocity plus the change in velocity (acceleration times change in time).
     let updated_velocity = Vec3::new(
         velocity.x - acceleration_total.x * delta_time,
         velocity.y - acceleration_total.y * delta_time,
@@ -107,23 +103,8 @@ pub fn update_capsule_position(mut previous_state: ResMut<Capsule>, time: Res<Ti
         position.z + updated_velocity.z * delta_time,
     );
 
-    // New velocity is the velocity plus the change in velocity (acceleration times change in time).
-    println!("{:#?}", altitude);
-    // println!("1. {:#?}", velocity);
-    // println!("2. {:#?}", updated_velocity);
-    // println!("3. {:#?}", position);
-    // println!("4. {:#?}", updated_position);
-    // println!("{:#?}", updated_velocity);
-
-    // let mut updated_position = Vec3::ZERO;
-    // let mut updated_velocity = Vec3::ZERO;
-
-    // // Update the position from new calculated value.
-    // updated_position.x = previous_position.x + 1.;
+    // Update states for next cycle.
     previous_state.position = updated_position;
-
-    // // Update the position from new calculated value.
-    // updated_velocity.x = previous_velocity.x + 1.;
     previous_state.velocity = updated_velocity;
 }
 
