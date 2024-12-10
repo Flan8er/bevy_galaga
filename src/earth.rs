@@ -4,7 +4,7 @@ use crate::movement::Rotatable;
 
 use crate::asset_loader::SceneAssets;
 
-pub const EARTH_DIAMETER: f32 = 12756274.;
+pub const EARTH_DIAMETER: f32 = 12756274.; // [m]
 
 pub fn spawn_earth(mut commands: Commands, scene_assets: Res<SceneAssets>) {
     commands.spawn((
