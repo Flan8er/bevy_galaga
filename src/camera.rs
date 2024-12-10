@@ -3,7 +3,6 @@ use bevy_panorbit_camera::PanOrbitCamera;
 
 use crate::capsule::{Capsule, INITIAL_POSITION};
 
-// const CAMERA_DISTANCE: f32 = 0.5;
 const CAMERA_DISTANCE: f32 = 600.;
 const CAMERA_FOV: f32 = 90.; // [deg]
 
@@ -52,9 +51,6 @@ pub fn update_camera_focus(
 
     // Compute a perpendicular "up" vector by normalizing to the object's position
     let up_direction = (capsule_position).normalize();
-
-    // println!("{:#?}", updated_camera_position);
-    // println!("{:#?}", capsule_position);
 
     // Set the camera's transform (position and orientation).
     *camera_transform = Transform::from_translation(updated_camera_position)

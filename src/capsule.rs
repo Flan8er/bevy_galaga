@@ -110,8 +110,7 @@ pub fn update_capsule_position(
         position.z + updated_velocity.z * delta_time,
     );
 
-    // println!("{}", altitude);
-    println!("{:#?}", position);
+    println!("{}", altitude);
 
     // Update states for next cycle.
     previous_state.position = updated_position;
@@ -120,5 +119,5 @@ pub fn update_capsule_position(
     // Reflect the updated position and orientation.
     let capsule_forward = updated_velocity.normalize();
     let rotation = Quat::from_rotation_arc(Vec3::Y, capsule_forward);
-    *capsule_transform = Transform::from_translation(position).with_rotation(rotation);
+    *capsule_transform = Transform::from_translation(updated_position).with_rotation(rotation);
 }
