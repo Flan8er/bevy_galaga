@@ -3,7 +3,9 @@ use bevy::prelude::*;
 use std::f32::consts::E;
 
 pub fn get_current_atmospheric_density(surface_altitude: f32) -> f32 {
-    let (air_temp, air_pressure) = if surface_altitude >= 25000. {
+    let (air_temp, air_pressure) = if surface_altitude > 100000. {
+        (10., 0.)
+    } else if surface_altitude >= 25000. {
         let temp = -131.21 + 0.00299 * surface_altitude;
         let pressure = 2.488 * ((temp + 273.1) / 216.6).powf(-11.388);
         (temp, pressure)
@@ -26,7 +28,7 @@ pub fn get_current_altitude(current_position: Vec3) -> f32 {
     let vector_magnitude =
         (current_position.x.powi(2) + current_position.y.powi(2) + current_position.z.powi(2))
             .sqrt();
-    let relative_altitude = (vector_magnitude - (EARTH_DIAMETER / 2.)).abs();
+    let relative_altitude = vector_magnitude - (EARTH_DIAMETER / 2.);
 
     relative_altitude
 }
@@ -85,21 +87,21 @@ pub fn calculate_cumulative_acceleration(
             drag_coefficient,
             cross_sectional_area,
             object_mass,
-            velocity.x,
+            velocity.x.abs(),
         ),
         calculate_drag_acceleration(
             air_density,
             drag_coefficient,
             cross_sectional_area,
             object_mass,
-            velocity.y,
+            velocity.y.abs(),
         ),
         calculate_drag_acceleration(
             air_density,
             drag_coefficient,
             cross_sectional_area,
             object_mass,
-            velocity.z,
+            velocity.z.abs(),
         ),
     );
     let acceleration_gravity = calculate_gravitational_acceleration(position, object_mass);

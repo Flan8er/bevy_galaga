@@ -21,8 +21,14 @@ impl Plugin for AppPlugins {
                 (load_assets, spawn_camera, spawn_earth, spawn_capsule).chain(),
             )
             .add_systems(
-                Update,
+                PreUpdate,
                 (update_capsule_position, update_camera_focus, rotate_object).chain(),
+            )
+            .add_systems(
+                PreUpdate,
+                apply_deferred
+                    .after(update_capsule_position)
+                    .before(update_camera_focus),
             );
     }
 }

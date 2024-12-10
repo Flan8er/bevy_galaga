@@ -10,20 +10,16 @@ use crate::{
     movement::Rotatable,
 };
 
-const CAPSULE_SCALE: f32 = 1.;
-// pub const INITIAL_POSITION: Vec3 = Vec3::new((EARTH_DIAMETER / 2.) + 200_000., 0., 0.);
-pub const INITIAL_POSITION: Vec3 = Vec3::new((EARTH_DIAMETER / 2.) + 125_000., 0., 0.);
-// pub const INITIAL_VELOCITY: Vec3 = Vec3::new(0., 7555., 0.);
-pub const INITIAL_VELOCITY: Vec3 = Vec3::new(0., 755., 0.);
+pub const INITIAL_POSITION: Vec3 = Vec3::new((EARTH_DIAMETER / 2.) + 200_000., 0., 0.);
+pub const INITIAL_VELOCITY: Vec3 = Vec3::new(0., 10500., 0.);
 pub const CAPSULE_MASS: f32 = 2.; // [kg]
 pub const CAPSULE_RADIUS: f32 = 0.125; // [m]
 pub const CAPSULE_DRAG_COEFFICIENT: f32 = 0.42; // Standard C_d for a half-sphere
-const LOSS_TO_HEAT: f32 = 0.90;
 
 #[derive(Resource, Debug, Clone)]
 pub struct Capsule {
-    position: Vec3,
-    velocity: Vec3,
+    pub position: Vec3,
+    pub velocity: Vec3,
 }
 
 impl Capsule {
@@ -35,32 +31,43 @@ impl Capsule {
     }
 }
 
+#[derive(Component)]
+pub struct Vehicle;
+
 pub fn spawn_capsule(mut commands: Commands, scene_assets: Res<SceneAssets>) {
-    commands.spawn((
-        SceneRoot(scene_assets.capsule.clone()),
-        Transform {
-            scale: Vec3::splat(CAPSULE_SCALE as f32),
-            translation: INITIAL_POSITION,
-            rotation: Quat::from_axis_angle(
-                Vec3::new(1., 0., 0.),
-                (-90. * std::f32::consts::PI) / 180.0,
-            ),
+    commands
+        .spawn((
+            Vehicle,
+            SceneRoot(scene_assets.capsule.clone()),
+            Transform {
+                ..Default::default()
+            },
+            Rotatable {
+                speed: 0.05,
+                axis: "y".to_string(),
+            },
+            Name::new("Capsule"),
+        ))
+        .insert(Transform {
+            translation: INITIAL_POSITION, // Move to the global INITIAL_POSITION
             ..Default::default()
-        },
-        GlobalTransform::default(),
-        Rotatable {
-            speed: 0.05,
-            axis: "y".to_string(),
-        },
-        Name::new("Capsule"),
-    ));
+        });
 }
 
-pub fn update_capsule_position(mut previous_state: ResMut<Capsule>, time: Res<Time>) {
+pub fn update_capsule_position(
+    mut previous_state: ResMut<Capsule>,
+    time: Res<Time>,
+    mut query: Query<&mut Transform, With<Vehicle>>,
+) {
     let delta_time: f32 = time.delta().as_secs_f32();
     if delta_time == 0.0 {
         return;
     }
+
+    // Get the single capsule entity from the query.
+    let Ok(mut capsule_transform) = query.get_single_mut() else {
+        return;
+    };
 
     let cross_sectional_area: f32 = PI * CAPSULE_RADIUS.powi(2);
 
@@ -72,7 +79,7 @@ pub fn update_capsule_position(mut previous_state: ResMut<Capsule>, time: Res<Ti
     let altitude = get_current_altitude(position);
 
     // Don't calculate change if vehicle is on the ground.
-    if altitude <= 0.0 {
+    if altitude <= 20000.0 {
         return;
     }
 
@@ -103,11 +110,15 @@ pub fn update_capsule_position(mut previous_state: ResMut<Capsule>, time: Res<Ti
         position.z + updated_velocity.z * delta_time,
     );
 
+    // println!("{}", altitude);
+    println!("{:#?}", position);
+
     // Update states for next cycle.
     previous_state.position = updated_position;
     previous_state.velocity = updated_velocity;
+
+    // Reflect the updated position and orientation.
+    let capsule_forward = updated_velocity.normalize();
+    let rotation = Quat::from_rotation_arc(Vec3::Y, capsule_forward);
+    *capsule_transform = Transform::from_translation(position).with_rotation(rotation);
 }
-
-pub fn update_capsule_orientation() {}
-
-// Schedule: Update capsule position, update capsule orientation, update camera focus

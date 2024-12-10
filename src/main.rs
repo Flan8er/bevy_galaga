@@ -6,8 +6,8 @@ mod calculation;
 mod camera;
 mod capsule;
 mod earth;
-mod plugins;
 mod movement;
+mod plugins;
 
 use plugins::AppPlugins;
 
