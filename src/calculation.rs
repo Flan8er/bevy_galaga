@@ -34,43 +34,43 @@ pub fn get_current_altitude(current_position: Vec3) -> f32 {
 }
 
 fn calculate_drag_acceleration(
+    velocity: Vec3,
     air_density: f32,
     coefficient_of_drag: f32,
     cross_sectional_area: f32,
     vehicle_mass: f32,
-    velocity: f32,
-) -> f32 {
-    let acceleration: f32 =
-        (coefficient_of_drag * air_density * velocity.powi(2) * cross_sectional_area)
-            / (2. * vehicle_mass);
+) -> Vec3 {
+    // Calculate the magnitude of velocity
+    let velocity_magnitude = velocity.length();
 
-    acceleration
+    // If velocity magnitude is near zero, return zero vector (avoid division by zero)
+    if velocity_magnitude.abs() < f32::EPSILON {
+        return Vec3::ZERO;
+    }
+
+    // Drag force per unit mass (acceleration due to drag)
+    let drag_magnitude = (coefficient_of_drag * air_density * velocity_magnitude.powi(2) * cross_sectional_area)
+        / (2.0 * vehicle_mass);
+
+    // Drag acceleration vector (opposes velocity direction)
+    velocity.normalize() * drag_magnitude
 }
 
-fn calculate_gravitational_acceleration(position: Vec3, vehicle_mass: f32) -> Vec3 {
+fn calculate_gravitational_acceleration(position: Vec3) -> Vec3 {
     let gravitational_constant: f32 = 6.6743 * 10_f32.powi(-11); // [Nm^2/kg^2]
     let earth_mass: f32 = 5.97219 * 10_f32.powi(24); // [kg]
 
-    let position_magnitude: f32 =
-        (position.x.powi(2) + position.y.powi(2) + position.z.powi(3)).sqrt();
-    let position_unit_vector = Vec3::new(
-        position.x / position_magnitude,
-        position.y / position_magnitude,
-        position.z / position_magnitude,
-    );
+    // Calculate the magnitude of the position vector
+    let position_magnitude: f32 = (position.x.powi(2) + position.y.powi(2) + position.z.powi(2)).sqrt();
 
-    // Calculate acceleration based off it's total distance
-    let acceleration =
-        (gravitational_constant * earth_mass * vehicle_mass) / position_magnitude.powi(2);
+    // Unit vector pointing toward the Earth's center (negative direction of position vector)
+    let position_unit_vector = -position / position_magnitude;
 
-    // Give contributions of total acceleration back to unit vector
-    let acceleration = Vec3::new(
-        position_unit_vector.x * acceleration,
-        position_unit_vector.y * acceleration,
-        position_unit_vector.z * acceleration,
-    );
+    // Calculate gravitational acceleration magnitude
+    let acceleration_magnitude = (gravitational_constant * earth_mass) / position_magnitude.powi(2);
 
-    acceleration
+    // Gravitational acceleration vector
+    -position_unit_vector * acceleration_magnitude
 }
 
 pub fn calculate_cumulative_acceleration(
@@ -81,30 +81,15 @@ pub fn calculate_cumulative_acceleration(
     velocity: Vec3,
     position: Vec3,
 ) -> Vec3 {
-    let acceleration_drag = Vec3::new(
+    let acceleration_drag =
         calculate_drag_acceleration(
+            velocity,
             air_density,
             drag_coefficient,
             cross_sectional_area,
             object_mass,
-            velocity.x.abs(),
-        ),
-        calculate_drag_acceleration(
-            air_density,
-            drag_coefficient,
-            cross_sectional_area,
-            object_mass,
-            velocity.y.abs(),
-        ),
-        calculate_drag_acceleration(
-            air_density,
-            drag_coefficient,
-            cross_sectional_area,
-            object_mass,
-            velocity.z.abs(),
-        ),
-    );
-    let acceleration_gravity = calculate_gravitational_acceleration(position, object_mass);
+        );
+    let acceleration_gravity = calculate_gravitational_acceleration(position);
 
     let acceleration_total = Vec3::new(
         acceleration_drag.x + acceleration_gravity.x,

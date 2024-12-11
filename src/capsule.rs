@@ -10,11 +10,16 @@ use crate::{
     movement::Rotatable,
 };
 
-pub const INITIAL_POSITION: Vec3 = Vec3::new((EARTH_DIAMETER / 2.) + 200_000., 0., 0.);
-pub const INITIAL_VELOCITY: Vec3 = Vec3::new(0., 10500., 0.);
-pub const CAPSULE_MASS: f32 = 2.; // [kg]
-pub const CAPSULE_RADIUS: f32 = 0.125; // [m]
-pub const CAPSULE_DRAG_COEFFICIENT: f32 = 0.42; // Standard C_d for a half-sphere
+// pub const INITIAL_POSITION: Vec3 = Vec3::new((EARTH_DIAMETER / 2.) + 200_000., 0., 0.);
+pub const INITIAL_POSITION: Vec3 = Vec3::new((EARTH_DIAMETER / 2.) + 190_000., 0., 0.);
+// pub const INITIAL_VELOCITY: Vec3 = Vec3::new(0., 7500., 0.);
+pub const INITIAL_VELOCITY: Vec3 = Vec3::new(0., 7309.7222, 0.);
+// pub const CAPSULE_MASS: f32 = 4.; // [kg]
+pub const CAPSULE_MASS: f32 = 77110.7;
+// pub const CAPSULE_RADIUS: f32 = 0.125; // [m]
+pub const CAPSULE_RADIUS: f32 = 4.5;
+// pub const CAPSULE_DRAG_COEFFICIENT: f32 = 0.42; // Standard C_d for a half-sphere
+pub const CAPSULE_DRAG_COEFFICIENT: f32 = 2.16;
 
 #[derive(Resource, Debug, Clone)]
 pub struct Capsule {
@@ -79,7 +84,7 @@ pub fn update_capsule_position(
     let altitude = get_current_altitude(position);
 
     // Don't calculate change if vehicle is on the ground.
-    if altitude <= 20000.0 {
+    if altitude <= 50.0 {
         return;
     }
 
@@ -110,7 +115,8 @@ pub fn update_capsule_position(
         position.z + updated_velocity.z * delta_time,
     );
 
-    println!("{}", altitude);
+    let updated_velocity_magnitude = (updated_velocity.x.powi(2) + updated_velocity.y.powi(2) + updated_velocity.z.powi(2)).sqrt();
+    println!("Altitude: {:6.0} - Velocity: {:5.0}", altitude, updated_velocity_magnitude);
 
     // Update states for next cycle.
     previous_state.position = updated_position;
