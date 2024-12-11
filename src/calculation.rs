@@ -4,7 +4,9 @@ use std::f32::consts::E;
 
 pub fn get_current_atmospheric_density(surface_altitude: f32) -> f32 {
     let (air_temp, air_pressure) = if surface_altitude > 100000. {
-        (10., 0.)
+        let temp = 10. + 0.002 * (surface_altitude - 100000.);
+        let pressure = 0.;
+        (temp, pressure)
     } else if surface_altitude >= 25000. {
         let temp = -131.21 + 0.00299 * surface_altitude;
         let pressure = 2.488 * ((temp + 273.1) / 216.6).powf(-11.388);
