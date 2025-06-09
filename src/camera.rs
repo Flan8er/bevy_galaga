@@ -1,7 +1,10 @@
 use bevy::prelude::*;
 use bevy_panorbit_camera::PanOrbitCamera;
 
-use crate::capsule::{Capsule, INITIAL_POSITION};
+use crate::{
+    capsule::{Capsule, INITIAL_POSITION},
+    earth::EARTH_DIAMETER,
+};
 
 const CAMERA_DISTANCE: f32 = 600.;
 const CAMERA_FOV: f32 = 90.; // [deg]
@@ -16,7 +19,7 @@ pub fn spawn_camera(mut commands: Commands) {
         Projection::Perspective(PerspectiveProjection {
             fov: (CAMERA_FOV * std::f32::consts::PI) / 180.0, // [rad]
             near: 0.1,
-            far: 1000.0,
+            far: EARTH_DIAMETER,
             aspect_ratio: 1.77778,
         }),
         Transform::from_xyz(
