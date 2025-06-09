@@ -3,8 +3,12 @@ name = "reentry_simulation"
 version = "0.1.0"
 edition = "2021"
 
+[lib]
+name = "reentry_simulation"
+path = "src/lib.rs"         # Ensure you create src/lib.rs
+
 [dependencies]
-bevy = { version = "0.15.0", features=["jpeg"] }
+bevy = { version = "0.15.0", features = ["jpeg"] }
 bevy_panorbit_camera = "0.21.1"
 bevy_framepace = "0.17"
 rand = "0.8.5"

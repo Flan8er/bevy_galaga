@@ -11,16 +11,16 @@ mod plugins;
 
 use plugins::AppPlugins;
 
-fn main() {
-    App::new()
-        // Bevy built-ins.
-        .insert_resource(ClearColor(Color::srgb(0., 0., 0.)))
+pub fn run_reentry() -> App {
+    let mut app = App::new();
+
+    app.insert_resource(ClearColor(Color::srgb(0., 0., 0.)))
         .insert_resource(AmbientLight {
             color: Color::default(),
             brightness: 750.0,
         })
         .add_plugins(DefaultPlugins)
         .add_plugins(PanOrbitCameraPlugin)
-        .add_plugins(AppPlugins)
-        .run();
+        .add_plugins(AppPlugins);
+    app
 }
