@@ -19,7 +19,17 @@ pub fn run_reentry() -> App {
             color: Color::default(),
             brightness: 750.0,
         })
-        .add_plugins(DefaultPlugins)
+        .add_plugins(DefaultPlugins.set(WindowPlugin {
+            primary_window: Some(Window {
+                canvas: Some("#bevy_canvas".into()),
+                transparent: true,
+                decorations: false,
+                fit_canvas_to_parent: true,
+                ..default()
+            }),
+            ..default()
+        }))
+        .insert_resource(ClearColor(Color::NONE))
         .add_plugins(PanOrbitCameraPlugin)
         .add_plugins(AppPlugins);
     app
